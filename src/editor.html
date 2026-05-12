@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html,
     body {
@@ -174,8 +175,9 @@
     const keywords = "если if тогда then иначеесли elsif иначе else конецесли endif для for каждого each из in по to пока while цикл do конеццикла enddo ждать await процедура procedure функция function конецпроцедуры endprocedure конецфункции endfunction перем var перейти goto возврат return продолжить continue прервать break и and или or не not попытка try исключение except вызватьисключение raise конецпопытки endtry новый new выполнить execute асинх истина ложь null Неопределено".split(" ")
 
     function endLexemExecute(element, props, endLexem) {
-      lexem = element.slice(props.beginLexem, endLexem)
-      type = props.lexemType
+      const lexem = element.slice(props.beginLexem, endLexem)
+      var type = props.lexemType
+      var result
       if (type == "identifier" && keywords.includes(lexem.toLowerCase())) {
         type = "keyword"
       } else if (type == "numberWithDot") {
@@ -183,11 +185,11 @@
       }
 
       props.beginLexem = endLexem
-      if (type == undefined || lexem.length == 0){
-          result = lexem
-        } else {
-          result = '<span class="' + type + '">' + lexem + '</span>'
-        }
+      if (type == undefined || lexem.length == 0) {
+        result = lexem
+      } else {
+        result = '<span class="' + type + '">' + lexem + '</span>'
+      }
       props.lexemType = undefined
       return result
     }
@@ -195,7 +197,7 @@
     function highlightCode(code) {
 
       var result = [];
-      props = {
+      var props = {
         lexemType: undefined,
         beginLexem: 0
       }
@@ -205,8 +207,8 @@
         let i = 0
         props.beginLexem = 0
         while (i < element.length) {
-          symbol = element[i]
-          symbolNext = element[i + 1]
+          let symbol = element[i]
+          let symbolNext = element[i + 1]
           if (props.lexemType == undefined) {
             if (symbol == "/" && symbolNext == "/") {
               props.lexemType = "comment"
@@ -265,8 +267,8 @@
           }
           i++
         }
-      result.push(endLexemExecute(element, props, i))
-      result.push('\n')
+        result.push(endLexemExecute(element, props, i))
+        result.push('\n')
       });
       return result.join('');
     }
@@ -298,7 +300,7 @@
 
     ta.addEventListener('keydown', function (e) {
       // Tab
-      if (e.keyCode === 9) {
+      if (e.key === 9) {
         e.preventDefault();
         var start = ta.selectionStart;
         var end = ta.selectionEnd;
