@@ -229,8 +229,7 @@
       var result = [];
 
       // Сначала экранируем HTML
-      lines = code.split("\n")
-      lines.forEach((element, index) => {
+      code.split("\n").forEach((element, index) => {
         props = {
           lexemType: undefined,
           beginLexem: 0
