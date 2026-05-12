@@ -304,8 +304,49 @@
         e.preventDefault();
         var start = ta.selectionStart;
         var end = ta.selectionEnd;
-        ta.value = ta.value.substring(0, start) + '\t' + ta.value.substring(end);
-        ta.selectionStart = ta.selectionEnd = start + 1;
+        
+        // Если есть выделение
+        if (start !== end) {
+          var selectedText = ta.value.substring(start, end);
+          var lines = selectedText.split('\n');
+          
+          if (e.shiftKey) {
+            // Shift+Tab: убираем отступ
+            lines = lines.map(function(line) {
+              if (line.startsWith('\t')) {
+                return line.substring(1);
+              }
+              // Также убираем пробельные отступы (4 пробела)
+              var spacesToRemove = 0;
+              for (var i = 0; i < line.length && i < 4; i++) {
+                if (line[i] === ' ') {
+                  spacesToRemove++;
+                } else {
+                  break;
+                }
+              }
+              return line.substring(spacesToRemove);
+            });
+          } else {
+            // Tab: добавляем отступ
+            lines = lines.map(function(line) {
+              return '\t' + line;
+            });
+          }
+          
+          var newSelectedText = lines.join('\n');
+          ta.value = ta.value.substring(0, start) + newSelectedText + ta.value.substring(end);
+          
+          // Восстанавливаем выделение с учётом изменений
+          var lengthDiff = newSelectedText.length - selectedText.length;
+          ta.selectionStart = start;
+          ta.selectionEnd = end + lengthDiff;
+        } else {
+          // Нет выделения: просто вставляем табуляцию
+          ta.value = ta.value.substring(0, start) + '\t' + ta.value.substring(end);
+          ta.selectionStart = ta.selectionEnd = start + 1;
+        }
+        
         render();
       }
 
