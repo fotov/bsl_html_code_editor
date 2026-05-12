@@ -88,11 +88,6 @@
       color: #00f;
     }
 
-    /* Строки */
-    .string {
-      color: #a31515;
-    }
-
     /* Комментарии */
     .comment {
       color: #008000;
@@ -178,33 +173,6 @@
     var tooltip = document.getElementById('tooltip');
     const keywords = "если if тогда then иначеесли elsif иначе else конецесли endif для for каждого each из in по to пока while цикл do конеццикла enddo ждать await процедура procedure функция function конецпроцедуры endprocedure конецфункции endfunction перем var перейти goto возврат return продолжить continue прервать break и and или or не not попытка try исключение except вызватьисключение raise конецпопытки endtry новый new выполнить execute асинх истина ложь null Неопределено".split(" ")
 
-    // Словарь подсказок для ключевых слов
-    var keywordHints = {
-      'если': { title: 'если', desc: 'Оператор условного перехода' },
-      'иначе': { title: 'иначе', desc: 'Альтернативная ветвь условия' },
-      'иначеесли': { title: 'иначеесли', desc: 'Дополнительное условие' },
-      'для': { title: 'для ... из', desc: 'Цикл по коллекции' },
-      'пока': { title: 'пока', desc: 'Цикл с условием' },
-      'процедура': { title: 'процедура', desc: 'Объявление процедуры' },
-      'функция': { title: 'функция', desc: 'Объявление функции' },
-      'возврат': { title: 'возврат', desc: 'Возврат значения из функции' },
-      'перем': { title: 'перем', desc: 'Объявление переменной' },
-      'знач': { title: 'знач', desc: 'Параметр по значению' },
-      'экспорт': { title: 'экспорт', desc: 'Экспортируемый метод/переменная' },
-      'попытка': { title: 'попытка', desc: 'Обработка исключений' },
-      'новый': { title: 'новый', desc: 'Создание объекта' }
-    };
-
-    // Регулярные выражения для подсветки
-    var strRe = /"[^"\\]*(?:\\.[^"\\]*)*"|'[^'\\]*(?:\\.[^'\\]*)*'/g;
-    var comRe = /\/\/.*$/gm;
-    var numRe = /\b\d+(\.\d+)?\b/g;
-    var dirRe = /^&.*/gm;
-
-    function escapeHtml(s) {
-      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
     function endLexemExecute(element, props, endLexem) {
       lexem = element.slice(props.beginLexem, endLexem)
       type = props.lexemType
@@ -227,14 +195,15 @@
     function highlightCode(code) {
 
       var result = [];
+      props = {
+        lexemType: undefined,
+        beginLexem: 0
+      }
 
       // Сначала экранируем HTML
       code.split("\n").forEach((element, index) => {
-        props = {
-          lexemType: undefined,
-          beginLexem: 0
-        }
         let i = 0
+        props.beginLexem = 0
         while (i < element.length) {
           symbol = element[i]
           symbolNext = element[i + 1]
@@ -320,39 +289,6 @@
       lines.scrollTop = ta.scrollTop;
     }
 
-    function showTooltip(keyword) {
-      var hint = keywordHints[keyword.toLowerCase()];
-      if (hint) {
-        tooltip.innerHTML = '<h4>' + hint.title + '</h4><p>' + hint.desc + '</p>';
-        tooltip.style.display = 'block';
-
-        // Позиционируем подсказку рядом с курсором
-        var coords = getCaretCoordinates(ta, ta.selectionStart);
-        var rect = ta.getBoundingClientRect();
-        tooltip.style.left = (rect.left + coords.left + 48) + 'px';
-        tooltip.style.top = (rect.top + coords.top + 8) + 'px';
-      }
-    }
-
-    function hideTooltip() {
-      tooltip.style.display = 'none';
-    }
-
-    // Упрощенная функция для получения координат курсора
-    function getCaretCoordinates(element, position) {
-      var text = element.value.substring(0, position);
-      var lines = text.split('\n');
-      var lineHeight = 21; // 14px * 1.5
-      var y = (lines.length - 1) * lineHeight;
-
-      // Приблизительная ширина символа
-      var charWidth = 8.4; // для Consolas 14px
-      var lastLine = lines[lines.length - 1];
-      var x = lastLine.length * charWidth;
-
-      return { left: x, top: y };
-    }
-
     ta.addEventListener('input', function () {
       render();
       syncscroll();
@@ -371,27 +307,8 @@
         render();
       }
 
-      // Ctrl+Space для контекстной подсказки
-      if (e.ctrlKey && e.keyCode === 32) {
-        e.preventDefault();
-        var text = ta.value;
-        var pos = ta.selectionStart;
 
-        // Находим слово перед курсором
-        var wordStart = pos;
-        while (wordStart > 0 && /[а-яА-Яa-zA-Z0-9_]/.test(text[wordStart - 1])) {
-          wordStart--;
-        }
-
-        var word = text.substring(wordStart, pos);
-        if (word) {
-          showTooltip(word);
-        }
-      }
     });
-
-    ta.addEventListener('click', hideTooltip);
-    ta.addEventListener('blur', hideTooltip);
 
     // Инициализация
     render();
