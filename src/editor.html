@@ -132,28 +132,6 @@
       color: #800080;
     }
 
-    /* Контекстная подсказка */
-    #tooltip {
-      position: absolute;
-      display: none;
-      background: #ffffe1;
-      border: 1px solid #ccc;
-      padding: 5px 10px;
-      font: 12px Consolas, Monaco, monospace;
-      z-index: 100;
-      max-width: 300px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    #tooltip h4 {
-      margin: 0 0 5px 0;
-      color: #00f;
-    }
-
-    #tooltip p {
-      margin: 0;
-      color: #333;
-    }
   </style>
 </head>
 
@@ -164,15 +142,13 @@
     <pre id="hl"></pre>
     <textarea id="code" spellcheck="false" autocomplete="off" wrap="off"
       placeholder="Начните вводить код..."></textarea>
-    <div id="tooltip"></div>
   </div>
 
   <script>
     var ta = document.getElementById('code');
     var hl = document.getElementById('hl');
     var lines = document.getElementById('lines');
-    var tooltip = document.getElementById('tooltip');
-    const keywords = "если if тогда then иначеесли elsif иначе else конецесли endif для for каждого each из in по to пока while цикл do конеццикла enddo ждать await процедура procedure функция function конецпроцедуры endprocedure конецфункции endfunction перем var перейти goto возврат return продолжить continue прервать break и and или or не not попытка try исключение except вызватьисключение raise конецпопытки endtry новый new выполнить execute асинх истина ложь null неопределено".split(" ")
+    const keywords = "если if тогда then иначеесли elsif иначе else конецесли endif для for каждого each из in по to пока while цикл do конеццикла enddo ждать await процедура procedure функция function конецпроцедуры endprocedure конецфункции endfunction перем var перейти goto возврат return продолжить continue прервать break и and или or не not попытка try исключение except вызватьисключение raise конецпопытки endtry новый new выполнить execute асинх истина ложь null Неопределено".split(" ")
 
     function endLexemExecute(element, props, endLexem) {
       const lexem = element.slice(props.beginLexem, endLexem)
