@@ -350,6 +350,35 @@
         render();
       }
 
+      // Enter - автоотступ
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        var start = ta.selectionStart;
+        var end = ta.selectionEnd;
+        
+        // Находим предыдущую строку
+        var textBeforeCursor = ta.value.substring(0, start);
+        var lastNewlineIndex = textBeforeCursor.lastIndexOf('\n');
+        var previousLine = lastNewlineIndex >= 0 
+          ? textBeforeCursor.substring(lastNewlineIndex + 1, start)
+          : textBeforeCursor;
+        
+        // Подсчитываем количество ведущих табуляций
+        var indent = '';
+        for (var i = 0; i < previousLine.length; i++) {
+          if (previousLine[i] === '\t') {
+            indent += '\t';
+          } else {
+            break;
+          }
+        }
+        
+        // Вставляем перенос строки и отступ через execCommand для сохранения истории
+        document.execCommand('insertText', false, '\n' + indent);
+        
+        render();
+      }
+
 
     });
 
