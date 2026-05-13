@@ -319,8 +319,7 @@
           ta.selectionEnd = end + lengthDiff;
         } else {
           // Нет выделения: просто вставляем табуляцию
-          ta.value = ta.value.substring(0, start) + '\t' + ta.value.substring(end);
-          ta.selectionStart = ta.selectionEnd = start + 1;
+          document.execCommand("insertText", false, '\t')
         }
         
         render();
