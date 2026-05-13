@@ -172,7 +172,7 @@
     var hl = document.getElementById('hl');
     var lines = document.getElementById('lines');
     var tooltip = document.getElementById('tooltip');
-    const keywords = "если if тогда then иначеесли elsif иначе else конецесли endif для for каждого each из in по to пока while цикл do конеццикла enddo ждать await процедура procedure функция function конецпроцедуры endprocedure конецфункции endfunction перем var перейти goto возврат return продолжить continue прервать break и and или or не not попытка try исключение except вызватьисключение raise конецпопытки endtry новый new выполнить execute асинх истина ложь null Неопределено".split(" ")
+    const keywords = "если if тогда then иначеесли elsif иначе else конецесли endif для for каждого each из in по to пока while цикл do конеццикла enddo ждать await процедура procedure функция function конецпроцедуры endprocedure конецфункции endfunction перем var перейти goto возврат return продолжить continue прервать break и and или or не not попытка try исключение except вызватьисключение raise конецпопытки endtry новый new выполнить execute асинх истина ложь null неопределено".split(" ")
 
     function endLexemExecute(element, props, endLexem) {
       const lexem = element.slice(props.beginLexem, endLexem)
@@ -343,8 +343,7 @@
           ta.selectionEnd = end + lengthDiff;
         } else {
           // Нет выделения: просто вставляем табуляцию
-          ta.value = ta.value.substring(0, start) + '\t' + ta.value.substring(end);
-          ta.selectionStart = ta.selectionEnd = start + 1;
+          document.execCommand("insertText", false, '\t')
         }
         
         render();
