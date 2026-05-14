@@ -179,6 +179,8 @@
       }
 
       // Сначала экранируем HTML
+      code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      
       code.split('\n').forEach((element, index) => {
         let i = 0
         props.beginLexem = 0
@@ -260,6 +262,9 @@
       }
       lines.innerHTML = html;
     }
+
+    // для доступа из кода 1С привяжем функцию к документу https://forum.infostart.ru/forum9/topic127620/message2317254/
+    document.render = render 
 
     function syncscroll() {
       hl.scrollTop = ta.scrollTop;
